@@ -26,7 +26,7 @@ services:
       retries: 20
       start_period: 30s
 
-  mongo: # Service name is 'mongo'
+  mongo: 
     image: mongo:latest
     container_name: mongo
     restart: always
@@ -48,11 +48,11 @@ services:
     ports:
       - "8081:8081"
     environment:
-      ME_CONFIG_MONGODB_SERVER: mongo # Correctly points to 'mongo'
+      ME_CONFIG_MONGODB_SERVER: mongo 
       ME_CONFIG_BASICAUTH_USERNAME: admin
       ME_CONFIG_BASICAUTH_PASSWORD: admin
     depends_on:
-      mongo: # Correctly depends on 'mongo'
+      mongo: 
         condition: service_healthy
 
   producer:
@@ -82,8 +82,8 @@ services:
       KAFKA_BOOTSTRAP_SERVERS: kafka:29092
       MONGO_URI: mongodb://mongo:27017/
     volumes:
-      - ./dicom_scans:/app/dicom_scans # This one is clearly working based on logs
-      - ./images:/app/images         # <--- THIS IS THE CRUCIAL ONE FOR IMAGES
+      - ./dicom_scans:/app/dicom_scans 
+      - ./images:/app/images        
     
 volumes:
   mongo-data:
