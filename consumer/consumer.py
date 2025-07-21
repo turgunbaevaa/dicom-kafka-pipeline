@@ -30,7 +30,7 @@ client = MongoClient(MONGO_URI)
 db = client["dicom_database"]
 collection = db["scans"]
 
-print("📡 Consumer запущен...")
+print("Consumer started...")
 
 try:
     while True:
