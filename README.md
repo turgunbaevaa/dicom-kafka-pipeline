@@ -57,5 +57,6 @@ docker system prune -a --volumes
 (Caution: This will delete all Docker-related data, including MongoDB data and named volumes.)
 
 Then, retry running the pipeline from scratch:
-
+```
 docker compose up --build -d
+```
