@@ -66,6 +66,7 @@ services:
       KAFKA_BROKER: kafka:29092
       KAFKA_TOPIC: file-data
       DICOM_FOLDER: /app/dicom_scans 
+    command: python -u producer.py
     volumes:
       - ./dicom_scans:/app/dicom_scans 
 

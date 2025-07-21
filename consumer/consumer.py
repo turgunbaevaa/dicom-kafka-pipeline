@@ -5,6 +5,7 @@ import json
 import pydicom
 import matplotlib.pyplot as plt
 import numpy as np
+import uuid
 
 # --- Configuration using environment variables ---
 KAFKA_BOOTSTRAP_SERVERS = os.getenv('KAFKA_BOOTSTRAP_SERVERS', 'kafka:9092')
@@ -84,8 +85,20 @@ try:
             else:
                 print("Warning: 'original_dicom_file' not found in Kafka message.")
 
-            collection.insert_one(data)
-            print(f"Metadata saved in Mongo for: {data.get('original_dicom_file')}")
+            unique_doc_id = data.get("metadata", {}).get("SOPInstanceUID")
+            
+            if not unique_doc_id:
+                unique_doc_id = data.get('record_uuid', str(uuid.uuid4()))
+                
+            if 'slice_number' in data:
+                unique_doc_id = f"{unique_doc_id}_slice_{data['slice_number']}"
+            
+            collection.update_one(
+                {"_id": unique_doc_id},
+                {"$set": data},
+                upsert=True     
+            )
+            print(f"Metadata saved/updated in Mongo for: {data.get('original_dicom_file')} (ID: {unique_doc_id})")
 
         except json.JSONDecodeError as e:
             print(f"JSON decoding error: {e} - Message: {msg.value().decode('utf-8', errors='ignore')}")
